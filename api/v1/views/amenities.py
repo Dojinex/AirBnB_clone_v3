@@ -6,25 +6,24 @@ from models import storage
 from models.amenity import Amenity
 
 
+# Retrieves the list of all Amenity objects
 @app_views.route('/amenities', methods=['GET'], strict_slashes=False)
 def amenities():
-    """Retrieves the list of all Amenity objects"""
     objs = storage.all(Amenity)
     return jsonify([obj.to_dict() for obj in objs.values()])
 
 
-@app_views.route('/amenities/<amenity_id>',
-                 methods=['GET'], strict_slashes=False)
+# Retrieves a Amenity object
+@app_views.route('/amenities/<amenity_id>', methods=['GET'], strict_slashes=False)
 def single_amenities(amenity_id):
-    """Retrieves a Amenity object"""
     obj = storage.get(Amenity, amenity_id)
     if not obj:
         abort(404)
     return jsonify(obj.to_dict())
 
 
-@app_views.route('/amenities/<amenity_id>',
-                 methods=['DELETE'], strict_slashes=False)
+# Deletes an Amenity object
+@app_views.route('/amenities/<amenity_id>', methods=['DELETE'], strict_slashes=False)
 def del_amenities(amenity_id):
     """Returns an empty dictionary with the status code 200"""
     obj = storage.get(Amenity, amenity_id)
@@ -36,9 +35,9 @@ def del_amenities(amenity_id):
     return make_response(jsonify({}), 200)
 
 
+# Creates a new Amenity object
 @app_views.route('/amenities', methods=['POST'], strict_slashes=False)
 def post_amenity():
-    """Returns the new Amenity with the status code 201"""
     new_amenity = request.get_json()
     if not new_amenity:
         abort(400, "Not a JSON")
@@ -51,10 +50,9 @@ def post_amenity():
     return make_response(jsonify(obj.to_dict()), 201)
 
 
-@app_views.route('/amenities/<amenity_id>',
-                 methods=['PUT'], strict_slashes=False)
+# Updates an existing Amenity object
+@app_views.route('/amenities/<amenity_id>', methods=['PUT'], strict_slashes=False)
 def put_amenity(amenity_id):
-    """Returns the Amenity object with the status code 200"""
     obj = storage.get(Amenity, amenity_id)
     if not obj:
         abort(404)
